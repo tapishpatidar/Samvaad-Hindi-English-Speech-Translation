@@ -1,32 +1,47 @@
 # Samvaad-Hindi-English-Speech-Translation
-This project is a **console-based application** that converts **spoken Hindi input** into **English text output**.  
-It was created using **Visual C++ AppWizard** and extended with speech recognition and translation logic.  
+This project is a **console-based application** that converts **spoken Hindi words** into **English text**.  
+It uses **audio signal processing**, **feature extraction**, and **Hidden Markov Models (HMM)** to recognize words from recorded Hindi speech and map them to their English equivalents.  
 
 ---
 
 ## Project Structure  
 
 - **Hindi_to_english_translation.vcxproj**  
-  Main project configuration file (Visual Studio). Stores project settings, platform info, and compiler options.  
+  Main Visual C++ project file containing configuration, platform info, and build settings.  
 
 - **Hindi_to_english_translation.vcxproj.filters**  
-  Organizes source, header, and resource files in Visual Studio.  
+  Organizes source and header files inside Visual Studio.  
 
 - **Hindi_to_english_translation.cpp**  
-  Core application file implementing speech recognition and translation pipeline.  
+  Core source code implementing:  
+  - Audio recording and playback using Windows API  
+  - Signal processing (DC shift, normalization, Hamming window)  
+  - Feature extraction (autocorrelation, LPC, cepstral coefficients, raised sine)  
+  - Codebook generation (LBG algorithm)  
+  - HMM training and prediction  
 
 - **StdAfx.h / StdAfx.cpp**  
-  Precompiled header files to speed up compilation.  
+  Precompiled headers to improve compilation speed.  
+
+- **Output_Training/**  
+  Contains generated **codebooks** and **universe CSV files** for HMM training.  
+
+- **Trained_Model/**  
+  Stores trained **HMM parameters (PI, A, B)** for each word.  
+
+- **Hindi recording/**  
+  Folder containing recorded Hindi word samples (`.txt` format) used for training and testing.  
 
 ---
 
 ## Features  
 
-- Captures **Hindi speech** using a microphone.  
-- Converts speech to **Hindi text** (speech recognition).  
-- Translates Hindi text to **English text** (translation engine).  
-- Displays English translation directly in the **console**.  
-- Lightweight and modular design for easy extension.  
+- Records **Hindi speech** through a microphone.  
+- Processes the audio: DC shift, normalization, windowing, and feature extraction.  
+- Generates a **codebook** using the LBG algorithm for vector quantization.  
+- Trains **Hidden Markov Models (HMMs)** for each word based on training samples.  
+- Predicts **English translation** of spoken Hindi words.  
+- Provides **live testing** and **pre-recorded sample testing**.  
 
 ---
 
@@ -34,29 +49,50 @@ It was created using **Visual C++ AppWizard** and extended with speech recogniti
 
 1. Open the project in **Visual Studio**.  
 2. Build the solution (`Ctrl + Shift + B`).  
-3. Connect a **microphone**.  
-4. Run the executable and start speaking in **Hindi**.  
-5. The application prints the **English text translation** in the console.  
+3. Connect a **microphone** for live testing.  
+4. Run the executable:  
+   - **Training:** Generates universe, codebook, and trains HMMs from recorded Hindi samples.  
+   - **Testing:** Tests pre-recorded samples in `Hindi recording/`.  
+   - **Live Testing:** Records speech and predicts English translation in real-time.  
 
 ---
 
-## 📌 Future Enhancements  
+## How It Works  
 
-- Add **Text-to-Speech (TTS)** for spoken English output.  
-- Enable **real-time speech-to-text subtitles**.  
-- Extend support for **other Indian languages**.  
-- Integrate with cloud APIs (Google Speech, Azure, or OpenAI Whisper) for higher accuracy.  
+1. **Recording & Playback:** Uses Windows API (`waveInOpen`, `waveOutWrite`) to capture and play audio.  
+2. **Preprocessing:**  
+   - DC shift removal  
+   - Normalization  
+   - Frame segmentation (sliding window)  
+   - Hamming window application  
+3. **Feature Extraction:**  
+   - Autocorrelation to compute LPC coefficients  
+   - Linear Predictive Coding (LPC)  
+   - Cepstral coefficients  
+   - Raised sine window to emphasize higher coefficients  
+4. **Codebook Generation:**  
+   - Uses LBG algorithm for vector quantization  
+   - Saves codebooks for later use in HMM training  
+5. **HMM Training & Prediction:**  
+   - Trains HMMs for each word using Forward-Backward and Viterbi algorithms  
+   - Computes probability of observed sequences for prediction  
+6. **Prediction:**  
+   - Takes live or pre-recorded speech  
+   - Extracts features  
+   - Computes probabilities using trained HMMs  
+   - Outputs the corresponding **English word**  
 
 ---
 
-## 📜 Notes  
+## Future Enhancements  
 
-- AppWizard-generated comments (`TODO:` markers) remain in the source to guide customization.  
-- This project demonstrates integration of **speech recognition** and **language translation** in C++.  
-- Can be extended into GUI-based or mobile applications.  
+- Add **Text-to-Speech (TTS)** to read English words aloud.  
+- Extend to **continuous speech translation** for phrases and sentences.  
+- Support more **Hindi words and phrases**.  
+- Integrate with **modern speech recognition APIs** (Google Speech, OpenAI Whisper) for higher accuracy.  
+- Build a **GUI interface** for easier use.  
 
 ---
-
-## 🎯 Example (Demo)  
 
 **Input (spoken in Hindi):**  
+
